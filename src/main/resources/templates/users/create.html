@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org/"
+	xmlns:layout="http://ultraq.net.nz/thymeleaf/layout/"
+	layout:decorator="layout">
+
+<th:block layout:fragment="content">
+	<div class="col-xs-12 col-md-12">
+	<h4>Create a new user</h4>
+	<hr>
+		<form th:action="@{/users/}" th:object="${user}" th:method="post">
+			<div class="row">
+				<div class="form-group col-md-6 col-xs-12">
+					<input type="text" th:field="*{name}" name="name" placeholder="Enter name" class="form-control" autofocus>
+					<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger mt-2"></p>
+				</div>
+				<div class="form-group col-md-6 col-xs-12">
+					<input type="text" th:field="*{lastname}" name="lastname" placeholder="Enter lastname" class="form-control">
+					<p th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}" class="text-danger mt-2"></p>
+				</div>
+			</div>
+			<div class="form-group">
+				<input type="text" th:field="*{email}" name="email" placeholder="Enter e-mail" class="form-control">
+				<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger mt-2"></p>
+			</div>
+			<div class="form-group">
+				<input type="password" th:field="*{password}" name="password" placeholder="******" class="form-control">
+				<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger mt-2"></p>
+			</div>
+			<div class="form-group">
+				<a href="/roles" class="btn btn-danger">Go back</a>
+				<button type="submit" class="btn btn-primary" style="cursor:pointer;">Save</button>
+			</div>
+		</form>
+	</div>
+</th:block>
+
+</html>
