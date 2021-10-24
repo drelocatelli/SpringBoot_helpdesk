@@ -10,11 +10,11 @@
 		<form th:action="@{/users/}" th:object="${user}" th:method="post">
 			<div class="row">
 				<div class="form-group col-md-6 col-xs-12">
-					<input type="text" th:field="*{name}" name="name" placeholder="Enter name" class="form-control" autofocus>
+					<input type="text" th:field="*{name}" name="name" placeholder="Enter first name" class="form-control" autofocus>
 					<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger mt-2"></p>
 				</div>
 				<div class="form-group col-md-6 col-xs-12">
-					<input type="text" th:field="*{lastname}" name="lastname" placeholder="Enter lastname" class="form-control">
+					<input type="text" th:field="*{lastname}" name="lastname" placeholder="Enter last name" class="form-control">
 					<p th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}" class="text-danger mt-2"></p>
 				</div>
 			</div>
