@@ -4,14 +4,26 @@
 	layout:decorator="layout">
 
 <th:block layout:fragment="content">
+	<h4>Listing users</h4>
+	<hr>
+	<a href="/users/new" class="btn btn-success mb-3 float-right">Create a new user</a>
 	<table class="table table-bordered">
 		<tr>
 			<th>Name</th>
+			<th>Last Name</th>
 			<th>E-mail</th>
+			<th colspan="2">Action</th>
 		</tr>
-		<tr>
-			<td>Leonan</td>
-			<td>leonan@gmail.com</td>
+		<tr th:each="user : ${list}">
+			<td th:text="${user.name}"></td>
+			<td th:text="${user.lastname}"></td>
+			<td th:text="${user.email}"></td>
+			<td><a th:href="@{users/edit/{id}(id = ${user.id})}" class="btn btn-warning float-right">Edit</a></td>
+			<td>
+				<form th:action="@{/users/{id}(id = ${user.id})}" th:method="DELETE">
+					<button type="submit" class="btn btn-danger" style="cursor:pointer;">Remove</button>
+				</form>
+			</td>
 		</tr>
 	</table>
 </th:block>

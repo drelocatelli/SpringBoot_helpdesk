@@ -10,5 +10,6 @@ public interface UserService {
 	public User create(User user);
 	public boolean delete(long id);
 	public boolean update(long id, User user);
+	public User show(long id);
 
 }

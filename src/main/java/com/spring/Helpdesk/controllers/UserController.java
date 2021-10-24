@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ public class UserController {
 
 	@GetMapping
 	public String index(Model model) {
+		model.addAttribute("list", this.userService.findAll());
 		return "users/index";
 	}
 
@@ -37,8 +39,11 @@ public class UserController {
 		return "users/create";
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable("id") Long id, Model model) {
+		User user = this.userService.show(id);
+		model.addAttribute("user", user);
+		
 		return "users/edit";
 	}
 	
@@ -49,6 +54,13 @@ public class UserController {
 		}
 		
 		this.userService.create(user);
+		return "redirect:/users";
+	}
+	
+	@DeleteMapping("{id}")
+	public String delete(@PathVariable("id") long id) {
+		this.userService.delete(id);
+		
 		return "redirect:/users";
 	}
 	

@@ -20,8 +20,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public List<User> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.repository.findAll();
 	}
 
 	@Override
@@ -31,14 +30,28 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean delete(long id) {
-		// TODO Auto-generated method stub
+		User user = findById(id);
+		
+		if(user != null) {
+			this.repository.delete(user);
+			return true;
+		}
+		
 		return false;
 	}
 
 	@Override
 	public boolean update(long id, User user) {
-		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	private User findById(long id) {
+		return this.repository.findById(id).orElse(null);
+	}
+
+	@Override
+	public User show(long id) {
+		return findById(id);
 	}
 
 }
