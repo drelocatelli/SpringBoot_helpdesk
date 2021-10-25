@@ -1,11 +1,17 @@
 package com.spring.Helpdesk.services;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.spring.Helpdesk.models.Role;
 import com.spring.Helpdesk.models.User;
+import com.spring.Helpdesk.repositories.RolesRepository;
 import com.spring.Helpdesk.repositories.UserRepository;
 
 @Service
@@ -14,7 +20,15 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository repository;
 	
-	public UserServiceImpl(UserRepository repository) {
+	@Autowired
+	private RolesRepository roleRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	public UserServiceImpl(UserRepository repository,RolesRepository roleRepository ,BCryptPasswordEncoder bCryptPasswordEncoder) {
+		this.roleRepository = roleRepository;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.repository = repository;
 	}
 	
@@ -25,6 +39,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User create(User user) {
+		user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+		
+		Role userRole = this.roleRepository.findByName("USER");
+		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+		
 		return this.repository.save(user);
 	}
 
@@ -49,7 +68,7 @@ public class UserServiceImpl implements UserService {
 			userExists.setName(user.getName());
 			userExists.setLastname(user.getLastname());
 			userExists.setEmail(user.getEmail());
-			userExists.setPassword(user.getPassword());
+			userExists.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 			userExists.setActive(user.isActive());
 			
 			this.repository.save(userExists);
