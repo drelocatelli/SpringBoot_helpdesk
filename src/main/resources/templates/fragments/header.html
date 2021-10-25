@@ -1,19 +1,34 @@
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
-	<button type="button" class="navbar-toggler navbar-toggler-right" data-toggle="collapse" data-target="navbar">
+	<button type="button" class="navbar-toggler navbar-toggler-right"
+		data-toggle="collapse" data-target="navbar">
 		<span class="navbar-toggler-icon"></span>
 	</button>
-	<a href="" class="navbar-brand">Helpdesk</a>
-	
+	<a href="/" class="navbar-brand">Helpdesk</a>
+
 	<div class="collapse navbar-collapse" id="navbar">
-		<ul class="navbar-nav mr-auto">
-			<li class="nav-item">
-				<a href="/users" class="nav-link">Users</a>
+		<ul class="navbar-nav mr-auto" sec:authorize="isAuthenticated()">
+			<li class="nav-item"><a href="/users" class="nav-link">Users</a>
 			</li>
-			<li class="nav-item">
-				<a href="/roles" class="nav-link">Roles</a>
+			<li class="nav-item"><a href="/roles" class="nav-link">Roles</a>
 			</li>
+			
 			<li class="nav-item">
-				<a href="/logout" class="nav-link">Logout</a>
+				<a href="/tickets" class="nav-link">Tickets</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link" href="javascript:void(0);"> 
+					<th:block th:if="${loggedIn} != null">
+						<span th:text="${loggedIn}"></span>
+					</th:block> 
+					<th:block th:unless="${loggedIn} != null">
+						
+					</th:block>
+				</a>
+		</ul>
+
+		<ul class="navbar-nav ml-auto" sec:authorize="isAuthenticated()">
+			<li class="nav-item"><a href="/logout" class="nav-link">Logout</a>
 			</li>
 		</ul>
 	</div>

@@ -48,4 +48,9 @@ public class RolesServiceImpl implements RoleService {
 		return this.repository.findById(id).orElse(null);
 	}
 
+	@Override
+	public Role findByName(String name) {
+		return this.repository.findByName(name);
+	}
+
 }

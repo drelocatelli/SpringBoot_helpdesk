@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org/"
+	xmlns:layout="http://ultraq.net.nz/thymeleaf/layout/"
+	layout:decorator="layout">
+
+<th:block layout:fragment="content">
+	<div class="col-xs-12 col-md-12 text-center">
+		<h4>Hello,
+		<span sec:authentication="name"></span>
+		</h4>
+		<hr>
+		<br>
+		Welcome to HelpDesk.
+	</div>
+</th:block>
+
+</html>

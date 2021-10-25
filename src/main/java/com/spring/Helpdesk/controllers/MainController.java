@@ -4,22 +4,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import com.spring.Helpdesk.models.User;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class AuthController {
-
-	@GetMapping("/login")
-	public String login(Model model) {
-		return "auth/login";
+@RequestMapping("/")
+public class MainController {
+	
+	@GetMapping()
+	public String main() {
+		return "redirect:/home";
 	}
 	
-	@GetMapping("/registration")
-	public String registration(Authentication auth, Model model) {
-		model.addAttribute("user", new User());
+	@GetMapping("/home")
+	public String home(Authentication auth, Model model) {
 		model.addAttribute("loggedIn", auth.getName());
-		return "auth/registration";
+		return "index";
 	}
 	
 }

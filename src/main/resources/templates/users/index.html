@@ -13,6 +13,7 @@
 			<th>Last Name</th>
 			<th>E-mail</th>
 			<th>Active</th>
+			<th>Roles</th>
 			<th colspan="2">Action</th>
 		</tr>
 		<tr th:each="user : ${list}">
@@ -20,6 +21,9 @@
 			<td th:text="${user.lastname}"></td>
 			<td th:text="${user.email}"></td>
 			<td th:text="${user.active}"></td>
+			<td th:each="role : ${user.roles}">
+				<span th:text="${role.name}"></span>
+			</td>
 			<td><a th:href="@{users/edit/{id}(id = ${user.id})}" class="btn btn-warning float-right">Edit</a></td>
 			<td>
 				<form th:action="@{/users/{id}(id = ${user.id})}" th:method="DELETE">

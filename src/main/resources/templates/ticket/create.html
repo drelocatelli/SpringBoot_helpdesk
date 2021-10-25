@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org/"
+	xmlns:layout="http://ultraq.net.nz/thymeleaf/layout/"
+	layout:decorator="layout">
+
+<th:block layout:fragment="content">
+	<div class="col-xs-12 col-md-12">
+	<h4>Create a new ticket</h4>
+	<hr>
+		<form th:action="@{/tickets/}" th:object="${ticket}" th:method="post">
+			<p th:text="${fields}"></p>
+			<div class="form-group">
+				<input type="text" th:field="*{name}" name="name" placeholder="Enter ticket title" class="form-control" autofocus>
+				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger mt-2">Role name error</p>
+			</div>
+			
+			<div class="form-group">
+				<textarea th:field="*{description}" name="description" placeholder="Enter ticket details" class="form-control"></textarea>
+				<p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger mt-2">#</p>
+			</div>
+			<div class="form-group">
+				<select th:field="*{technician}"  class="custom-select">
+					<option th:each="tech : ${techs}" 
+							th:value="${tech.id}" 
+							th:text="${tech.name}"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<a href="/roles" class="btn btn-secondary">Go back</a>
+				<button type="submit" class="btn btn-primary" style="cursor:pointer;">Save</button>
+			</div>
+		</form>
+	</div>
+</th:block>
+
+</html>

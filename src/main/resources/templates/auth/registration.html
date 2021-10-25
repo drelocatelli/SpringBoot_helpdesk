@@ -5,10 +5,9 @@
 
 <th:block layout:fragment="content">
 	<div class="col-xs-12 col-md-12">
-	<h4>Edit a user</h4>
+	<h4>Create a new user</h4>
 	<hr>
-		<form th:action="@{/users/{id}(id = ${user.id})}" th:object="${user}" th:method="put">
-			<input type="hidden" th:field="*{id}">
+		<form th:action="@{/users/}" th:object="${user}" th:method="post">
 			<div class="row">
 				<div class="form-group col-md-6 col-xs-12">
 					<input type="text" th:field="*{name}" name="name" placeholder="Enter first name" class="form-control" autofocus>
@@ -28,20 +27,8 @@
 				<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger mt-2"></p>
 			</div>
 			<div class="form-group">
-				<select th:field="*{roles}"  class="custom-select">
-					<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}" th:selected="${role.id == user.roles[0].id}"></option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="custom-control custom-checkbox">
-					<input type="checkbox" th:field="*{active}" class="custom-control-input" />
-					<span class="custom-control-indicator"></span>
-					<span class="custom-control-description">Active?</span>
-				</label>
-			</div>
-			<div class="form-group">
-				<a href="/users" class="btn btn-secondary">Go back</a>
-				<button type="submit" class="btn btn-primary" style="cursor:pointer;">Save</button>
+				<a href="/login" class="btn btn-secondary">Go back</a>
+				<button type="submit" class="btn btn-primary" style="cursor:pointer;">Create</button>
 			</div>
 		</form>
 	</div>
