@@ -1,11 +1,13 @@
 package com.spring.Helpdesk.services;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public List<User> findAll() {
-		return this.repository.findAll();
+		return this.repository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 	}
 
 	@Override
@@ -95,6 +97,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findAllWhereRoleEquals(long role_id) {
 		return this.repository.findAllWhereRoleEquals(role_id);
+	}
+
+	@Override
+	public User findCurrentUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		String email = auth.getName();
+		
+		User userLogged = this.repository.findByEmail(email);
+		
+		return userLogged;
+		
 	}
 
 }

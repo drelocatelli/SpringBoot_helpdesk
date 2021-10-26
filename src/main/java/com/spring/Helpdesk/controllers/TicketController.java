@@ -1,14 +1,17 @@
 package com.spring.Helpdesk.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.spring.Helpdesk.models.Role;
 import com.spring.Helpdesk.models.Ticket;
-import com.spring.Helpdesk.services.RoleService;
 import com.spring.Helpdesk.services.TicketService;
 import com.spring.Helpdesk.services.UserService;
 
@@ -16,25 +19,33 @@ import com.spring.Helpdesk.services.UserService;
 @RequestMapping("/tickets")
 public class TicketController {
 	
-	private final long ROLE_ID = 4;
-	
 	@Autowired
 	private TicketService ticketService;
 	
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private RoleService roleService;
+	@GetMapping()
+	public String main(Model model) {
+		model.addAttribute("list", this.ticketService.findAll());
+		model.addAttribute("userLoggedIn", this.userService.findCurrentUser());
+		return "ticket/index";
+	}
 
 	@GetMapping("/new")
 	public String create(Model model) {
-		model.addAttribute("ticket", new Ticket());
+		model = this.ticketService.createTemplate(model);
+		return "ticket/create";		
+	}
+	
+	@PostMapping
+	public String save(@Valid @ModelAttribute("ticket") Ticket ticket, BindingResult bindingResult, Model model) {
+		if(bindingResult.hasErrors()) {
+			return "ticket/create";
+		}
 		
-		Role adminRole = this.roleService.findByName("ADMIN");
-		model.addAttribute("techs", this.userService.findAllWhereRoleEquals(adminRole.getId()));
-//		model.addAttribute("techs", this.userService.findAllWhereRoleEquals(ROLE_ID));
-		return "ticket/create";
+		this.ticketService.create(ticket);
+		return "redirect:/tickets";
 	}
 	
 }

@@ -17,7 +17,6 @@ public class MainController {
 	
 	@GetMapping("/home")
 	public String home(Authentication auth, Model model) {
-		model.addAttribute("loggedIn", auth.getName());
 		return "index";
 	}
 	

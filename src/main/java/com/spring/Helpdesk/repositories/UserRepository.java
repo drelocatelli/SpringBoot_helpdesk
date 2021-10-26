@@ -12,7 +12,12 @@ import com.spring.Helpdesk.models.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	
-	@Query(value = "SELECT us FROM users us INNER JOIN users_roles ur ON us.id = ur.user_id WHERE ur.role_id = :role_id", nativeQuery = true)
+//	@Query(value = "SELECT us.* FROM users us INNER JOIN users_roles ur ON us.id = ur.user_id WHERE ur.role_id = :role_id AND us.id NOT IN(:user_id)", nativeQuery = true)
+//	public List<User> findAllWhereRoleEquals(@Param("role_id") long role_id, @Param("user_id") long user_id);
+	
+	@Query(value = "SELECT us.* FROM users us INNER JOIN users_roles ur ON us.id = ur.user_id WHERE ur.role_id = :role_id", nativeQuery = true)
 	public List<User> findAllWhereRoleEquals(@Param("role_id") long role_id);
+	
+	public User findByEmail(String email);
 	
 }
