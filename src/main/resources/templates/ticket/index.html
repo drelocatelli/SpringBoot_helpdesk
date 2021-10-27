@@ -5,93 +5,70 @@
 
 <th:block layout:fragment="content">
 	<div class="col-xs-12 col-md-12">
-		<a href="/tickets/new" class="btn btn-success float-right">Create a new ticket</a>
+		<a href="/tickets/new" class="btn btn-success float-right">Create
+			a new ticket</a>
 	</div>
 	<div class="col-xs-12 col-md-12">
-		<h4>Listing tickets</h4>
+		<h4>Listing 
+			<th:block th:switch="${userLoggedIn.roles[0].name}">
+				<span th:case="'ADMIN'">all tickets</span>
+				<span th:case="*">your tickets</span>
+			</th:block>
+		</h4>
 		<hr />
 		<table class="table table-bordered">
 			<thead>
 				<tr>
+					<th>Status</th>
 					<th>Name</th>
-					<th>Date Created</th>
 					<th>From</th>
 					<th>To</th>
-					<th>Status</th>
+					<th>Date Created</th>
 					<th>Closed Date</th>
+					<th>Resume</th>
 					<th colspan="3">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="ticket : ${list}">
-					<td th:text="${ticket.name}"></td>
+					<td th:switch="${ticket.finished}"><span th:case="${true}"
+						class="badge badge-danger" th:text="Closed"></span> <span
+						th:case="${false}" class="badge badge-success" th:text="Open"></span>
+					</td>
+					<td th:text="${#strings.abbreviate(ticket.name, 30)}"></td>
+					<td><th:block
+							th:if="${userLoggedIn.name} == ${ticket.userOpen.name}">
+							<i style="color: #b4b4b4;">You</i>
+						</th:block> <th:block
+							th:unless="${userLoggedIn.name} == ${ticket.userOpen.name}">
+							<span th:text="${ticket.userOpen.name}"></span>
+						</th:block></td>
+					<td><th:block
+							th:if="${userLoggedIn.name} == ${ticket.technician.name}">
+							<i style="color: #b4b4b4;">You</i>
+						</th:block> <th:block
+							th:unless="${userLoggedIn.name} == ${ticket.technician.name}">
+							<span th:text="${ticket.technician.name}"></span>
+						</th:block></td>
 					<td th:text="${#dates.format(ticket.created, 'dd/MM/yyyy H:mm')}"></td>
+					<td th:if="${ticket.closed} != null"><span
+						th:utext="${#dates.format(ticket.closed, 'dd/MM/yyyy H:m')}"></span>
+					</td>
+					<td th:unless="${ticket.closed} != null"><i
+						style="color: #b4b4b4;">Is already opened!</i></td>
+					<td><span
+						th:text="${#strings.abbreviate(ticket.description, 21)}"></span></td>
+					<td><a th:href="@{/tickets/{id}(id = ${ticket.id})}"
+						class="btn btn-secondary inline">Read</a></td>
+					<td><a th:href="@{/tickets/edit/{id}(id = ${ticket.id})}"
+						class="btn btn-warning inline">Edit</a></td>
 					<td>
-						<th:block th:if="${userLoggedIn.name} == ${ticket.userOpen.name}">
-							<span><i>You</i></span>
-						</th:block>
-						<th:block th:unless="${userLoggedIn.name} == ${ticket.userOpen.name}">	
-							<span th:text="${ticket.userOpen.name}"></span>							
-						</th:block>
+						<form th:action="@{/tickets/{id}(id = ${ticket.id})}"
+							th:method="delete" class="inline">
+							<button type="submit" class="btn btn-danger"
+								style="cursor: pointer;">Delete</button>
+						</form>
 					</td>
-					<td>
-						<th:block th:if="${userLoggedIn.name} == ${ticket.technician.name}">
-							<span><i>You</i></span>
-						</th:block>
-						<th:block th:unless="${userLoggedIn.name} == ${ticket.technician.name}">	
-							<span th:text="${ticket.technician.name}"></span>							
-						</th:block>
-					</td>
-					<td th:switch="${ticket.finished}">
-						<span th:case="${true}"
-						class="badge badge-danger" th:text="Closed"></span> 
-						<span
-						th:case="${false}" class="badge badge-success"
-						th:text="Open"></span>
-					</td>
-					<td th:if="${ticket.closed} != null">
-						<span th:text="${#dates.format(ticket.closed, 'dd/MM/yyyy H:m')}"></span>
-					</td>
-					<td th:unless="${ticket.closed} != null">
-						<i>Is already opened!</i>
-					</td>
-					<thblock th:switch="${userLoggedIn.roles[0].name}">
-						<th:block th:case="ADMIN">
-							<td>
-								<a th:href="@{/tickets/{id}(id = ${ticket.id})}"
-								class="btn btn-secondary inline">Read</a> 
-								
-							</td>
-							<td>
-								<a th:href="@{/tickets/edit/{id}(id = ${ticket.id})}"
-								class="btn btn-warning inline">Edit</a>
-							</td>
-							<td>
-								<form th:action="@{/tickets/{id}(id = ${ticket.id})}"
-									th:method="delete" class="inline">
-									<button type="submit" class="btn btn-danger" style="cursor:pointer;">Delete</button>
-								</form>
-							</td>
-						</th:block>
-						<th:block th:case="USER">
-							<td>
-								<a th:href="@{/tickets/{id}(id = ${ticket.id})}"
-								class="btn btn-secondary inline">Read</a> 
-							</td>
-							<td>
-								<a th:if="${userLoggedIn.id == ticket.userOpen.id}"
-								th:href="@{/tickets/edit/{id}(id = ${ticket.id})}"
-								class="btn btn-warning inline">Edit</a>
-							</td>
-							<td>
-								<form th:if="${userLoggedIn.id == ticket.userOpen.id}"
-									th:action="@{/tickets/{id}(id = ${ticket.id})}"
-									th:method="delete" class="inline">
-									<button type="submit" class="btn btn-danger" style="cursor:pointer;">Delete</button>
-								</form>
-							</td>
-						</th:block>
-					</thblock>
 				</tr>
 			</tbody>
 		</table>

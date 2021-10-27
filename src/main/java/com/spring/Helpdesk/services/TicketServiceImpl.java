@@ -1,6 +1,9 @@
 package com.spring.Helpdesk.services;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -22,9 +25,6 @@ public class TicketServiceImpl implements TicketService {
 	private TicketRepository ticketRepository;
 	
 	@Autowired
-	private TicketService ticketService;
-	
-	@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
@@ -44,12 +44,15 @@ public class TicketServiceImpl implements TicketService {
 	public List<Ticket> findAll() {
 		return (List<Ticket>) this.ticketRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 	}
+	
+	@Override
+	public List<Ticket> findByUserId(long user_id) {
+		return this.ticketRepository.findByUserId(user_id);
+	}
 
 	@Override
 	public Ticket create(Ticket ticket) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String userName = auth.getName();
-		User userLogged = this.userRepository.findByEmail(userName);
+		User userLogged = this.userService.findCurrentUser();
 		
 		ticket.setUserOpen(userLogged);
 		
@@ -58,13 +61,39 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public boolean delete(long id) {
-		// TODO Auto-generated method stub
+		Ticket ticketExists = findById(id);
+		
+		if(ticketExists != null) {
+			this.ticketRepository.delete(ticketExists);
+			
+			return true;
+		}
+		
 		return false;
 	}
 
 	@Override
 	public boolean update(long id, Ticket ticket) {
-		// TODO Auto-generated method stub
+		Ticket ticketExists = findById(id);
+		
+		if(ticketExists != null) {
+			ticketExists.setId(ticket.getId());
+			ticketExists.setName(ticket.getName());
+			ticketExists.setDescription(ticket.getDescription());
+			ticketExists.setFinished(ticket.isFinished());
+			ticketExists.setTechnician(ticket.getTechnician());
+			
+			if(ticket.isFinished()) {
+				ticketExists.setClosed(new Date());
+			}else {
+				ticketExists.setClosed(null);
+			}
+			
+			this.ticketRepository.save(ticketExists);
+			return true;
+			
+		}
+		
 		return false;
 	}
 
@@ -72,20 +101,18 @@ public class TicketServiceImpl implements TicketService {
 	public Ticket show(long id) {
 		return this.ticketRepository.findById(id).orElse(null);
 	}
+	
+	public Ticket findById(long id) {
+		return this.ticketRepository.findById(id).orElse(null);
+	}
 
 	@Override
-	public Model createTemplate(Model model) {
-		model.addAttribute("ticket", new Ticket());
+	public Model findAllTechnician(Model model) {
 		
 		Role adminRole = this.roleService.findByName("ADMIN");
+		User userLogged =  this.userService.findCurrentUser();
 
-		//		model.addAttribute("techs", this.userService.findAllWhereRoleEquals(ROLE_ID));
-		
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		String userName = auth.getName();
-		
-//		User userLogged =  this.userRepository.findByEmail(userName);
-		List<User> techs = this.userService.findAllWhereRoleEquals(adminRole.getId());
+		List<User> techs = this.userService.findAllWhereRoleEquals(adminRole.getId(), userLogged.getId());
 		model.addAttribute("techs", techs);
 		
 		return model;

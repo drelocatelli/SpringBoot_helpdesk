@@ -6,17 +6,16 @@
 <th:block layout:fragment="content">
 	<div class="col-xs-12 col-md-12">
 		<a href="/tickets" class="btn btn-secondary float-right">Go back</a>
+		<a th:href="@{/tickets/edit/{id}(id = ${ticket.id})}" class="btn btn-warning float-right mr-2">Edit this</a>
 	</div>
 	<div class="col-xs-12 col-md-12">
 		<h2>
 			Ticket <span th:utext="'#'+${ticket.id}"></span>
-			<th:block th:if="${ticket.closed} != null">
-				<div class="badge badge-danger">
+			<th:block th:switch="${ticket.finished}">
+				<div th:case="${true}" class="badge badge-danger">
 					Closed
 				</div>
-			</th:block>
-			<th:block th:unless="${ticket.closed} != null">
-				<div class="badge badge-success">
+				<div th:case="${false}" class="badge badge-success">
 					Open
 				</div>
 			</th:block>
@@ -32,22 +31,36 @@
 				<br />
 				<li class="breadcrumb-item">
 					<b>Technician:</b>
-					<span th:text="${ticket.technician.name}"></span>
+					<th:block th:switch="${userLoggedIn.name}">
+						<th:block th:case="${ticket.technician.name}">
+							<span>You</span>
+						</th:block>
+						<th:block th:case="*">
+							<span th:text="${ticket.technician.name}"></span>
+						</th:block>
+					</th:block>
 				</li>
 				<li class="breadcrumb-item">
 					<b>Author:</b>
-					<span th:text="${ticket.userOpen.name}"></span>
+					<th:block th:switch="${userLoggedIn.name}">
+						<th:block th:case="${ticket.userOpen.name}">
+							You
+						</th:block>
+						<th:block th:case="*">
+							<span th:text="${ticket.userOpen.name}"></span>
+						</th:block>
+					</th:block>
 				</li>
 			</ol>
 		</nav>
 
-		<div class="card" style="padding: 25px 10px;">
+		<div class="card" style="padding: 25px 10px; word-break:break-word;">
 			<h4 class="card-title">
-				<span th:text="${ticket.name}"></span>
+				<a href="" th:text="${ticket.name}"></a>
 			</h4>
 			<hr />
 			<div class="card-body">
-				<p style="white-space:pre-wrap;" th:utext="${ticket.description}"></p>
+				<p style="white-space:pre-wrap; text-align:justify;" th:utext="${ticket.description}"></p>
 			
 				<th:block th:if="${ticket.closed} != null">
 				<hr />
@@ -59,6 +72,10 @@
 			</div>
 		</div>
 		
+	</div>
+	
+	<div class="col-xs-12 col-md-12 mt-5">
+		<a href="/tickets" class="btn btn-secondary float-right">Return</a>
 	</div>
 </th:block>
 </html>

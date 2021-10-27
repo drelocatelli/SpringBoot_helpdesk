@@ -6,11 +6,16 @@
 <th:block layout:fragment="content">
 	<div class="col-xs-12 col-md-12 text-center">
 		<h4>Hello,
-		<span sec:authentication="name"></span>
+		<span th:text="${#strings.capitalize(userLoggedIn.name)} + ' ' + ${#strings.capitalize(userLoggedIn.lastname)}"></span>
 		</h4>
+		<b>Your data:</b>
+		<br />
+		Mail: <span sec:authentication="name"></span>
+		<br />
+		Role:
+		<span th:text="${userLoggedIn.roles[0].name}"></span>
 		<hr>
-		<br>
-		Welcome to HelpDesk.
+		Welcome to HelpDesk. 
 	</div>
 </th:block>
 

@@ -7,24 +7,21 @@
 
 	<div class="collapse navbar-collapse" id="navbar">
 		<ul class="navbar-nav mr-auto" sec:authorize="isAuthenticated()">
-			<li class="nav-item"><a href="/users" class="nav-link">Users</a>
+			<li class="nav-item"><a href="/users" class="nav-link" sec:authorize="hasAuthority('ADMIN')">Users</a>
 			</li>
-			<li class="nav-item"><a href="/roles" class="nav-link">Roles</a>
-			</li>
-			
-			<li class="nav-item">
-				<a href="/tickets" class="nav-link">Tickets</a>
+			<li class="nav-item"><a href="/roles" class="nav-link" sec:authorize="hasAuthority('ADMIN')">Roles</a>
 			</li>
 
-			<li class="nav-item">
-				<a class="nav-link" href="javascript:void(0);"> 
-					<th:block th:if="${loggedIn} != null">
-						<span th:text="${loggedIn}"></span>
-					</th:block> 
-					<th:block th:unless="${loggedIn} != null">
-						
-					</th:block>
+			<li class="nav-item dropdown">
+				<a href="javascript:void(0);" class="nav-link dropdown-toggle" data-toggle="dropdown">
+				Tickets
 				</a>
+				<div class="dropdown-menu">
+					<a href="/tickets/new" class="dropdown-item">Add ticket</a>
+					<a href="/tickets" class="dropdown-item">Show tickets</a>
+				</div>
+			</li>
+
 		</ul>
 
 		<ul class="navbar-nav ml-auto" sec:authorize="isAuthenticated()">

@@ -9,7 +9,9 @@ import com.spring.Helpdesk.models.Ticket;
 public interface TicketService {
 
 	public List<Ticket> findAll();
-	public Model createTemplate(Model model);
+	public List<Ticket> findByUserId(long user_id);
+	public Ticket findById(long id);
+	public Model findAllTechnician(Model model);
 	public Ticket create(Ticket ticket);
 	public boolean delete(long id);
 	public boolean update(long id, Ticket ticket);

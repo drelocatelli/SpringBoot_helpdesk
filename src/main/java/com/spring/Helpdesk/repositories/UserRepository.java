@@ -15,8 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //	@Query(value = "SELECT us.* FROM users us INNER JOIN users_roles ur ON us.id = ur.user_id WHERE ur.role_id = :role_id AND us.id NOT IN(:user_id)", nativeQuery = true)
 //	public List<User> findAllWhereRoleEquals(@Param("role_id") long role_id, @Param("user_id") long user_id);
 	
-	@Query(value = "SELECT us.* FROM users us INNER JOIN users_roles ur ON us.id = ur.user_id WHERE ur.role_id = :role_id", nativeQuery = true)
-	public List<User> findAllWhereRoleEquals(@Param("role_id") long role_id);
+	@Query(value = "select * from users inner join users_roles on users.id = users_roles.user_id where users_roles.role_id = :role_id and users.id not in(:user_id)", nativeQuery = true)
+	public List<User> findAllWhereRoleEquals(@Param("role_id") Long role_id, @Param("user_id") Long user_id);
 	
 	public User findByEmail(String email);
 	

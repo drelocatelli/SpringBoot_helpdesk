@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org/"
+	xmlns:layout="http://ultraq.net.nz/thymeleaf/layout/"
+	layout:decorator="layout">
+
+<th:block layout:fragment="content">
+	<div class="col-xs-12 col-md-12">
+	<h4>Edit ticket 
+	<span th:text="'#'+${ticket.id}"></span>
+	</h4>
+	<hr>
+		<div class="form-edit">
+			<form th:action="@{/tickets/{id}(id = ${ticket.id})}" th:object="${ticket}" th:method="put">
+				<input type="hidden" th:field="*{id}" />
+				<div class="form-group">
+					<input type="text" th:field="*{name}" name="name" placeholder="Enter ticket title" class="form-control" autofocus>
+					<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger mt-2">Role name error</p>
+				</div>
+				
+				<div class="form-group">
+					<textarea th:field="*{description}" name="description" placeholder="Enter ticket details" class="form-control"></textarea>
+					<p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger mt-2">#</p>
+				</div>
+				<div class="form-group">
+					Technician:
+					<select th:field="*{technician}"  class="custom-select">
+						<option th:each="tech : ${techs}" 
+								th:value="${tech.id}" 
+								th:text="${tech.name}"></option>
+					</select>
+				</div>
+				<div class="form-group">
+					Finished:
+					<select th:field="*{finished}" class="custom-select">
+						<option th:value="true">True</option>
+						<option th:value="false">False</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<a th:href="@{/tickets/{id}(id = ${ticket.id})}" class="btn btn-secondary">View this ticket</a>
+					<a href="/tickets/" class="btn btn-secondary">Show tickets</a>
+					<br />
+					<button type="submit" class="btn btn-primary mt-2" style="cursor:pointer;">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</th:block>
+
+</html>

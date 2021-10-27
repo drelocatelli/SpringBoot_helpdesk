@@ -46,7 +46,7 @@ public class User {
 	private String password;
 	
 	@Column
-	private boolean active = true;
+	private boolean active = false;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "users_roles", 

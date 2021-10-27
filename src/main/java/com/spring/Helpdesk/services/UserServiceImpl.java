@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public List<User> findAll() {
+	public List<User> findAll() {		
 		return this.repository.findAll(Sort.by(Sort.Direction.DESC, "id"));
 	}
 
@@ -95,8 +95,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> findAllWhereRoleEquals(long role_id) {
-		return this.repository.findAllWhereRoleEquals(role_id);
+	public List<User> findAllWhereRoleEquals(long role_id, long user_id) {
+		return this.repository.findAllWhereRoleEquals(role_id, user_id);
 	}
 
 	@Override
@@ -109,6 +109,14 @@ public class UserServiceImpl implements UserService {
 		
 		return userLogged;
 		
+	}
+
+	@Override
+	public boolean checkByRole(String role) {
+		boolean userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(role));
+		
+        return userRole;
 	}
 
 }
