@@ -70,8 +70,7 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public Ticket show(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.ticketRepository.findById(id).orElse(null);
 	}
 
 	@Override

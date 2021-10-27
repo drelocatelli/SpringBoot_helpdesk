@@ -15,19 +15,33 @@
 				<tr>
 					<th>Name</th>
 					<th>Date Created</th>
-					<th>Opened By</th>
-					<th>To Technician</th>
+					<th>From</th>
+					<th>To</th>
 					<th>Status</th>
 					<th>Closed Date</th>
-					<th>Actions</th>
+					<th colspan="3">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="ticket : ${list}">
 					<td th:text="${ticket.name}"></td>
 					<td th:text="${#dates.format(ticket.created, 'dd/MM/yyyy H:mm')}"></td>
-					<td th:text="${ticket.technician.name}"></td>
-					<td th:text="${ticket.userOpen.name}"></td>
+					<td>
+						<th:block th:if="${userLoggedIn.name} == ${ticket.userOpen.name}">
+							<span><i>You</i></span>
+						</th:block>
+						<th:block th:unless="${userLoggedIn.name} == ${ticket.userOpen.name}">	
+							<span th:text="${ticket.userOpen.name}"></span>							
+						</th:block>
+					</td>
+					<td>
+						<th:block th:if="${userLoggedIn.name} == ${ticket.technician.name}">
+							<span><i>You</i></span>
+						</th:block>
+						<th:block th:unless="${userLoggedIn.name} == ${ticket.technician.name}">	
+							<span th:text="${ticket.technician.name}"></span>							
+						</th:block>
+					</td>
 					<td th:switch="${ticket.finished}">
 						<span th:case="${true}"
 						class="badge badge-danger" th:text="Closed"></span> 
@@ -42,26 +56,41 @@
 						<i>Is already opened!</i>
 					</td>
 					<thblock th:switch="${userLoggedIn.roles[0].name}">
-						<td th:case="ADMIN"><a
-							th:href="@{/tickets/{id}(id = ${ticket.id})}"
-							class="btn btn-secondary inline">See</a> <a
-							th:href="@{/tickets/edit/{id}(id = ${ticket.id})}"
-							class="btn btn-info inline">Edit</a>
-							<form th:action="@{/tickets/{id}(id = ${ticket.id})}"
-								th:method="delete" class="inline">
-								<button type="submit" class="btn btn-danger">Delete</button>
-							</form></td>
-						<td th:case="USER"><a
-							th:href="@{/tickets/{id}(id = ${ticket.id})}"
-							class="btn btn-secondary inline">See</a> <a
-							th:if="${userLoggedIn.id == ticket.userOpen.id}"
-							th:href="@{/tickets/edit/{id}(id = ${ticket.id})}"
-							class="btn btn-info inline">Edit</a>
-							<form th:if="${userLoggedIn.id == ticket.userOpen.id}"
-								th:action="@{/tickets/{id}(id = ${ticket.id})}"
-								th:method="delete" class="inline">
-								<button type="submit" class="btn btn-danger">Delete</button>
-							</form></td>
+						<th:block th:case="ADMIN">
+							<td>
+								<a th:href="@{/tickets/{id}(id = ${ticket.id})}"
+								class="btn btn-secondary inline">Read</a> 
+								
+							</td>
+							<td>
+								<a th:href="@{/tickets/edit/{id}(id = ${ticket.id})}"
+								class="btn btn-warning inline">Edit</a>
+							</td>
+							<td>
+								<form th:action="@{/tickets/{id}(id = ${ticket.id})}"
+									th:method="delete" class="inline">
+									<button type="submit" class="btn btn-danger" style="cursor:pointer;">Delete</button>
+								</form>
+							</td>
+						</th:block>
+						<th:block th:case="USER">
+							<td>
+								<a th:href="@{/tickets/{id}(id = ${ticket.id})}"
+								class="btn btn-secondary inline">Read</a> 
+							</td>
+							<td>
+								<a th:if="${userLoggedIn.id == ticket.userOpen.id}"
+								th:href="@{/tickets/edit/{id}(id = ${ticket.id})}"
+								class="btn btn-warning inline">Edit</a>
+							</td>
+							<td>
+								<form th:if="${userLoggedIn.id == ticket.userOpen.id}"
+									th:action="@{/tickets/{id}(id = ${ticket.id})}"
+									th:method="delete" class="inline">
+									<button type="submit" class="btn btn-danger" style="cursor:pointer;">Delete</button>
+								</form>
+							</td>
+						</th:block>
 					</thblock>
 				</tr>
 			</tbody>

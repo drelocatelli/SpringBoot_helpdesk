@@ -18,7 +18,6 @@ public class AuthController {
 	@GetMapping("/registration")
 	public String registration(Authentication auth, Model model) {
 		model.addAttribute("user", new User());
-		model.addAttribute("loggedIn", auth.getName());
 		return "auth/registration";
 	}
 	

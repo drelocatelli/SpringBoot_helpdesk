@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org/"
+	xmlns:layout="http://ultraq.net.nz/thymeleaf/layout/"
+	layout:decorator="layout">
+
+<th:block layout:fragment="content">
+	<div class="col-xs-12 col-md-12">
+		<a href="/tickets" class="btn btn-secondary float-right">Go back</a>
+	</div>
+	<div class="col-xs-12 col-md-12">
+		<h2>
+			Ticket <span th:utext="'#'+${ticket.id}"></span>
+			<th:block th:if="${ticket.closed} != null">
+				<div class="badge badge-danger">
+					Closed
+				</div>
+			</th:block>
+			<th:block th:unless="${ticket.closed} != null">
+				<div class="badge badge-success">
+					Open
+				</div>
+			</th:block>
+		</h2>
+		<br />
+
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<b>Created at:</b>
+					<span th:text="${#dates.format(ticket.created, 'dd/MM/yyyy H:m')}"></span>
+				</li>
+				<br />
+				<li class="breadcrumb-item">
+					<b>Technician:</b>
+					<span th:text="${ticket.technician.name}"></span>
+				</li>
+				<li class="breadcrumb-item">
+					<b>Author:</b>
+					<span th:text="${ticket.userOpen.name}"></span>
+				</li>
+			</ol>
+		</nav>
+
+		<div class="card" style="padding: 25px 10px;">
+			<h4 class="card-title">
+				<span th:text="${ticket.name}"></span>
+			</h4>
+			<hr />
+			<div class="card-body">
+				<p style="white-space:pre-wrap;" th:utext="${ticket.description}"></p>
+			
+				<th:block th:if="${ticket.closed} != null">
+				<hr />
+				<div class="closed">
+					<b>Closed date:</b> <span th:text="${#dates.format(ticket.closed, 'dd/MM/yyyy H:m')}"></span>
+				</div>
+				</th:block>
+			
+			</div>
+		</div>
+		
+	</div>
+</th:block>
+</html>
