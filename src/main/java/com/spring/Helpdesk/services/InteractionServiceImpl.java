@@ -54,4 +54,9 @@ public class InteractionServiceImpl implements InteractionService {
 		return false;
 	}
 
+	@Override
+	public Interaction findById(long id) {
+		return this.interactionRepository.findById(id).orElse(null);
+	}
+
 }

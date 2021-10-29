@@ -65,7 +65,7 @@ public class TicketController {
 		model.addAttribute("interactions", interactions);
 		
 		// se nao for admin e se nao for dono do ticket
-		if(!this.userService.checkByRole("ADMIN") && !ticket.getUserOpen().getName().equals(userLoggedIn.getName())) {
+		if(!this.userService.checkByRole("ADMIN") && !ticket.getUserOpen().getEmail().equals(userLoggedIn.getEmail())) {
 			return "redirect:/denied";
 		}
 		
@@ -95,7 +95,7 @@ public class TicketController {
 		model.addAttribute("userLoggedIn", userLoggedIn);
 
 		// se nao for admin e se nao for dono do ticket
-		if(!this.userService.checkByRole("ADMIN") && !ticket.getUserOpen().getName().equals(userLoggedIn.getName())) {
+		if(!this.userService.checkByRole("ADMIN") && !ticket.getUserOpen().getEmail().equals(userLoggedIn.getEmail())) {
 			return "redirect:/denied";
 		}
 		
@@ -124,13 +124,13 @@ public class TicketController {
 		Ticket ticket = this.ticketService.findById(id);
 		
 		// se nao for admin e se nao for dono do ticket
-		if(this.userService.checkByRole("ADMIN") || ticket.getUserOpen().getName().equals(userLoggedIn.getName())) {
-			this.ticketService.delete(id);
-			
-			return "redirect:/tickets";
+		if(!this.userService.checkByRole("ADMIN") && !ticket.getUserOpen().getEmail().equals(userLoggedIn.getEmail())) {
+			return "redirect:/denied";
 		}
 		
-		return "redirect:/denied";
+		this.ticketService.delete(id);
+		
+		return "redirect:/tickets";
 		
 	}
 	

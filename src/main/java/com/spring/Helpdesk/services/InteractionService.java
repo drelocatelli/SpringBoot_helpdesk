@@ -8,5 +8,6 @@ public interface InteractionService {
 
 	public Interaction create(Interaction interaction, long ticketId);
 	public boolean delete(long id, long ticketId);
+	public Interaction findById(long id);
 	
 }

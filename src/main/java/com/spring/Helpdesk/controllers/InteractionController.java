@@ -51,11 +51,12 @@ public class InteractionController {
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable("ticketId") long ticketId, @PathVariable("id") long id, Model model) {
 		
+		Interaction interaction = this.interactionService.findById(id);
 		Ticket ticket = this.ticketService.findById(ticketId);
 		User userLoggedIn = this.userService.findCurrentUser();
 		
-		// se nao for admin e se nao for dono do ticket
-		if(!this.userService.checkByRole("ADMIN") && !ticket.getUserOpen().getName().equals(userLoggedIn.getName())) {
+		// se nao for dono do interaction
+		if(!interaction.getUserInteraction().getEmail().equals(userLoggedIn.getEmail())) {
 			return "redirect:/denied";
 		}
 		
