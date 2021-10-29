@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.spring.Helpdesk.models.Interaction;
+import com.spring.Helpdesk.models.Ticket;
+import com.spring.Helpdesk.models.User;
 import com.spring.Helpdesk.services.InteractionService;
+import com.spring.Helpdesk.services.TicketService;
+import com.spring.Helpdesk.services.UserService;
 
 @Controller
 @RequestMapping("/tickets/{ticketId}/interactions")
@@ -22,7 +26,15 @@ public class InteractionController {
 	@Autowired
 	private InteractionService interactionService;
 	
-	public InteractionController(InteractionService interactionService) {
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private TicketService ticketService;
+	
+	public InteractionController(InteractionService interactionService, UserService userService, TicketService ticketService) {
+		this.ticketService = ticketService;
+		this.userService = userService;
 		this.interactionService = interactionService;
 	}
 	
@@ -38,7 +50,17 @@ public class InteractionController {
 	
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable("ticketId") long ticketId, @PathVariable("id") long id, Model model) {
-		return null;
+		
+		Ticket ticket = this.ticketService.findById(ticketId);
+		User userLoggedIn = this.userService.findCurrentUser();
+		
+		// se nao for admin e se nao for dono do ticket
+		if(!this.userService.checkByRole("ADMIN") && !ticket.getUserOpen().getName().equals(userLoggedIn.getName())) {
+			return "redirect:/denied";
+		}
+		
+		this.interactionService.delete(id, ticketId);
+		return "redirect:/tickets/"+ticketId;
 	}
 
 }

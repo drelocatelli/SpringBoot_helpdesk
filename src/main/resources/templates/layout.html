@@ -14,8 +14,9 @@
     <script>
           tinymce.init({
             selector: '#mytextarea',
-            toolbar: 'bold italic underline | forecolor',
+            toolbar: 'forecolor removeformat | bold italic underline | link |',
            	menubar: '',
+           	plugins: 'link ',
            	// remove bad error message
            	init_instance_callback : function(editor) {
            	    var freeTiny = document.querySelector('.tox .tox-notification--in');

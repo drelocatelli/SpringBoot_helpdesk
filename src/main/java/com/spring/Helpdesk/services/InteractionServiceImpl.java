@@ -44,7 +44,13 @@ public class InteractionServiceImpl implements InteractionService {
 
 	@Override
 	public boolean delete(long id, long ticketId) {
-		// TODO Auto-generated method stub
+		Interaction interaction = this.interactionRepository.findById(id).orElse(null);
+		
+		if(interaction != null) {
+			this.interactionRepository.delete(interaction);
+			return true;
+		}
+		
 		return false;
 	}
 
