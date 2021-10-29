@@ -5,44 +5,32 @@
 
 <th:block layout:fragment="content">
 	<div class="col-xs-12 col-md-12">
-		<a href="/tickets" class="btn btn-secondary float-right">Go back</a>
-		<a th:href="@{/tickets/edit/{id}(id = ${ticket.id})}" class="btn btn-warning float-right mr-2">Edit this</a>
+		<a href="/tickets" class="btn btn-secondary float-right">Return</a> 
+		<form th:action="@{/tickets/{id}(id = ${ticket.id})}"
+			th:method="delete" class="inline float-right mr-2">
+			<button type="submit" class="btn btn-danger" style="cursor: pointer;">Delete</button>
+		</form>
+		<a th:href="@{/tickets/edit/{id}(id = ${ticket.id})}"
+			class="btn btn-warning float-right mr-2">Edit</a>
 	</div>
 	<div class="col-xs-12 col-md-12">
 		<h2>
 			Ticket <span th:utext="'#'+${ticket.id}"></span>
 			<th:block th:switch="${ticket.finished}">
-				<div th:case="${true}" class="badge badge-danger">
-					Closed
-				</div>
-				<div th:case="${false}" class="badge badge-success">
-					Open
-				</div>
+				<div th:case="${true}" class="badge badge-danger">Closed</div>
+				<div th:case="${false}" class="badge badge-success">Open</div>
 			</th:block>
 		</h2>
 		<br />
 
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item">
-					<b>Created at:</b>
-					<span th:text="${#dates.format(ticket.created, 'dd/MM/yyyy H:m')}"></span>
+				<li class="breadcrumb-item"><b>Created at:</b> <span
+					th:text="${#dates.format(ticket.created, 'dd/MM/yyyy H:mm')}"></span>
 				</li>
 				<br />
-				<li class="breadcrumb-item">
-					<b>Technician:</b>
-					<th:block th:switch="${userLoggedIn.name}">
-						<th:block th:case="${ticket.technician.name}">
-							<span>You</span>
-						</th:block>
-						<th:block th:case="*">
-							<span th:text="${ticket.technician.name}"></span>
-						</th:block>
-					</th:block>
-				</li>
-				<li class="breadcrumb-item">
-					<b>Author:</b>
-					<th:block th:switch="${userLoggedIn.name}">
+				<li class="breadcrumb-item"><b>Author:</b> <th:block
+						th:switch="${userLoggedIn.name}">
 						<th:block th:case="${ticket.userOpen.name}">
 							You
 						</th:block>
@@ -51,31 +39,81 @@
 						</th:block>
 					</th:block>
 				</li>
+				<li class="breadcrumb-item"><b>Technician:</b> <th:block
+						th:switch="${userLoggedIn.name}">
+						<th:block th:case="${ticket.technician.name}">
+							<span>You</span>
+						</th:block>
+						<th:block th:case="*">
+							<span th:text="${ticket.technician.name}"></span>
+						</th:block>
+					</th:block></li>
 			</ol>
 		</nav>
 
-		<div class="card" style="padding: 25px 10px; word-break:break-word;">
+		<div class="card" style="padding: 25px 10px; word-break: break-word;">
 			<h4 class="card-title">
-				<a href="" th:text="${ticket.name}"></a>
+				<a href="" th:text="${#strings.capitalize(ticket.name)}" style="color:black"></a>
 			</h4>
-			<hr />
 			<div class="card-body">
-				<p style="white-space:pre-wrap; text-align:justify;" th:utext="${ticket.description}"></p>
-			
+				<p style="white-space: pre-wrap; text-align: justify;"
+					th:utext="${ticket.description}"></p>
+
 				<th:block th:if="${ticket.closed} != null">
-				<hr />
-				<div class="closed">
-					<b>Closed date:</b> <span th:text="${#dates.format(ticket.closed, 'dd/MM/yyyy H:m')}"></span>
-				</div>
+					<hr />
+					<div class="closed">
+						<b>Closed date:</b> <span
+							th:text="${#dates.format(ticket.closed, 'dd/MM/yyyy H:mm')}"></span>
+					</div>
 				</th:block>
-			
+
 			</div>
 		</div>
 		
+		<div th:if="${ticket.finished} == false" class="card mt-3" style="padding: 10px; word-break: break-word;">
+			<h4 class="mb-3">
+				<svg style="height: 32px;
+    position: relative;
+    fill: #607D8B;
+    top: 6px;" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+	  <path fillRule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clipRule="evenodd" />
+	</svg>
+			&nbsp;Add new reply</h4>
+			<div class="card-body">
+				<form th:action="@{/tickets/{ticketId}/interactions(ticketId = ${ticket.id})}" th:object="${interaction}" th:method="post">
+					<div class="form-group">
+						<!-- <input type="text" th:value="${#authentication.name}" class="form-control" disabled /> -->
+					</div>
+					<div class="form-group">
+					<textarea id="mytextarea" th:field="*{text}" class="form-control" placeholder="Enter text here..."></textarea>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary float-right" style="cursor:pointer;">New post</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<div class="mt-5">
+			<th:block th:each="interact : ${interactions}">
+				<div class="card mt-3" style="padding: 10px; word-break: break-word;">
+					<th:block th:switch="${userLoggedIn.name}">
+						<b th:case="${interact.userInteraction.name}" th:text="'You:'" style="background:#ebebeb;"></b>
+						<b th:case="*" th:text="${interact.userInteraction.name}+' '+${interact.userInteraction.lastname}+':'"></b>
+					</th:block>
+					
+					<p th:utext="${interact.text}"></p>
+					
+					<br />
+					<span style="font-size:12px; color:#b0b0b0;" th:text="${#dates.format(interact.created, 'dd/MM/yyyy H:mm')}"></span>
+				</div>
+			</th:block>
+		</div>
+
 	</div>
-	
+
 	<div class="col-xs-12 col-md-12 mt-5">
-		<a href="/tickets" class="btn btn-secondary float-right">Return</a>
+		<a href="/tickets" class="btn btn-secondary float-right mb-4">Return</a>
 	</div>
 </th:block>
 </html>

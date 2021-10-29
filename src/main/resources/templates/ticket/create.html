@@ -2,7 +2,7 @@
 <html xmlns:th="http://thymeleaf.org/"
 	xmlns:layout="http://ultraq.net.nz/thymeleaf/layout/"
 	layout:decorator="layout">
-
+	
 <th:block layout:fragment="content">
 	<div class="col-xs-12 col-md-12">
 	<h4>Create a new ticket</h4>
@@ -15,15 +15,26 @@
 			</div>
 			
 			<div class="form-group">
-				<textarea th:field="*{description}" name="description" placeholder="Enter ticket details" class="form-control"></textarea>
+				<textarea id="mytextarea" th:field="*{description}" name="description" placeholder="Enter ticket details" class="form-control"></textarea>
 				<p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger mt-2">#</p>
 			</div>
 			<div class="form-group">
 			Technician:
 				<select th:field="*{technician}"  class="custom-select">
-					<option th:each="tech : ${techs}" 
-							th:value="${tech.id}" 
-							th:text="${tech.name}"></option>
+					<th:block th:each="tech : ${techs}">
+						<th:block th:switch="${tech.name}">
+							<th:block th:case="${userLoggedIn.name}">
+								<option 
+									th:value="${tech.id}" 
+									th:text="You"></option>
+							</th:block>
+							<th:block th:case="*">
+								<option 
+										th:value="${tech.id}" 
+										th:text="${tech.name}"></option>
+							</th:block>
+						</th:block>
+					</th:block>
 				</select>
 			</div>
 			<div class="form-group">
@@ -33,5 +44,4 @@
 		</form>
 	</div>
 </th:block>
-
 </html>

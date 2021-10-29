@@ -1,5 +1,7 @@
 package com.spring.Helpdesk.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.spring.Helpdesk.models.Interaction;
 import com.spring.Helpdesk.models.Ticket;
 import com.spring.Helpdesk.models.User;
 import com.spring.Helpdesk.services.TicketService;
@@ -34,11 +37,15 @@ public class TicketController {
 		
 		User userLoggedIn = this.userService.findCurrentUser();
 		
+		// se for admin
 		if(this.userService.checkByRole("ADMIN")) {
 			model.addAttribute("list", this.ticketService.findAll());
+			model.addAttribute("count", this.ticketService.numTickets());
 		}else {
 			model.addAttribute("list", this.ticketService.findByUserId(userLoggedIn.getId()));
+			model.addAttribute("count", this.ticketService.numTicketsByUser(userLoggedIn.getId()));
 		}
+		
 		
 		model.addAttribute("userLoggedIn", this.userService.findCurrentUser());
 		
@@ -50,8 +57,12 @@ public class TicketController {
 		User userLoggedIn = this.userService.findCurrentUser();
 		Ticket ticket = this.ticketService.show(id);
 		
+		List<Interaction> interactions = ticket.getInteractions();
+		
 		model.addAttribute("userLoggedIn", userLoggedIn);
 		model.addAttribute("ticket", ticket);
+		model.addAttribute("interaction", new Interaction());
+		model.addAttribute("interactions", interactions);
 		
 		// se nao for admin e se nao for dono do ticket
 		if(!this.userService.checkByRole("ADMIN") && !ticket.getUserOpen().getName().equals(userLoggedIn.getName())) {
@@ -64,7 +75,10 @@ public class TicketController {
 	@GetMapping("/new")
 	public String create(Model model) {
 		model = this.ticketService.findAllTechnician(model);
+		User userLoggedIn = this.userService.findCurrentUser();
+		
 		model.addAttribute("ticket", new Ticket());
+		model.addAttribute("userLoggedIn", userLoggedIn);
 		
 		return "ticket/create";		
 	}
@@ -78,6 +92,7 @@ public class TicketController {
 
 		model = this.ticketService.findAllTechnician(model);
 		model.addAttribute("ticket", ticket);
+		model.addAttribute("userLoggedIn", userLoggedIn);
 
 		// se nao for admin e se nao for dono do ticket
 		if(!this.userService.checkByRole("ADMIN") && !ticket.getUserOpen().getName().equals(userLoggedIn.getName())) {

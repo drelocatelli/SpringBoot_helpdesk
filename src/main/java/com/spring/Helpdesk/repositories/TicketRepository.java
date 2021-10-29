@@ -15,4 +15,10 @@ public interface TicketRepository extends PagingAndSortingRepository<Ticket, Lon
 	@Query(value = "SELECT * FROM tickets INNER JOIN users ON users.id = tickets.user_id WHERE users.id = :user_id ORDER BY tickets.id DESC", nativeQuery = true)
 	public List<Ticket> findByUserId(@Param("user_id") long user_id);
 	
+	@Query(value = "SELECT COUNT(*) FROM tickets", nativeQuery = true)
+	public long numTickets();
+	
+	@Query(value = "SELECT COUNT(*) FROM tickets WHERE tickets.user_id = :user_id", nativeQuery = true)
+	public long numTicketsByUser(long user_id);
+	
 }

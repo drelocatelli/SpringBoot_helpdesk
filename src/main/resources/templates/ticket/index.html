@@ -11,9 +11,10 @@
 	<div class="col-xs-12 col-md-12">
 		<h4>Listing 
 			<th:block th:switch="${userLoggedIn.roles[0].name}">
-				<span th:case="'ADMIN'">all tickets</span>
+				<span th:case="'ADMIN'">all tickets (because you're admin)</span>
 				<span th:case="*">your tickets</span>
 			</th:block>
+		<span th:text="'- '+${count}"></span>
 		</h4>
 		<hr />
 		<table class="table table-bordered">
@@ -52,7 +53,7 @@
 						</th:block></td>
 					<td th:text="${#dates.format(ticket.created, 'dd/MM/yyyy H:mm')}"></td>
 					<td th:if="${ticket.closed} != null"><span
-						th:utext="${#dates.format(ticket.closed, 'dd/MM/yyyy H:m')}"></span>
+						th:utext="${#dates.format(ticket.closed, 'dd/MM/yyyy H:mm')}"></span>
 					</td>
 					<td th:unless="${ticket.closed} != null"><i
 						style="color: #b4b4b4;">Is already opened!</i></td>

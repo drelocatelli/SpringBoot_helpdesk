@@ -21,9 +21,5 @@ public class AuthController {
 		return "auth/registration";
 	}
 	
-	@GetMapping("/denied")
-	public String denied(Model model) {
-		return "403";
-	}
 	
 }

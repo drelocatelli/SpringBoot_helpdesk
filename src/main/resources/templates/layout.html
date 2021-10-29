@@ -9,10 +9,26 @@
 	
 	<meta charset="utf-8" />
 	<title>HelpDesk - Spring App</title>
+	
+	<script th:src="@{/js/tinymce.min.js}" ></script>
+    <script>
+          tinymce.init({
+            selector: '#mytextarea',
+            toolbar: 'bold italic underline | forecolor',
+           	menubar: '',
+           	// remove bad error message
+           	init_instance_callback : function(editor) {
+           	    var freeTiny = document.querySelector('.tox .tox-notification--in');
+           	   freeTiny.style.display = 'none';
+           	  }
+          });
+    </script>
+	<th:block layout:fragment="scripts"></th:block>
 </head>
 
 <body>
 	<th:block layout:replace="fragments/header"></th:block>
+	
 	<div class="container">
 		<div class="row">
 			<th:block layout:fragment="content"></th:block>

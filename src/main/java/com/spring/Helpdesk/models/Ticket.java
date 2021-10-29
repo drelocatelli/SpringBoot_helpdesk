@@ -1,7 +1,9 @@
 package com.spring.Helpdesk.models;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -51,6 +54,10 @@ public class Ticket {
 	@JoinColumn(name = "technician_id")
 	@JsonBackReference
 	private User technician;
+	
+	@Column
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "ticket")
+	private List<Interaction> interactions;
 	
 	@PrePersist
 	public void PrePersist() {
@@ -123,6 +130,14 @@ public class Ticket {
 
 	public void setTechnician(User technician) {
 		this.technician = technician;
+	}
+	
+	public List<Interaction> getInteractions(){
+		return interactions;
+	}
+	
+	public void setInteractions(List<Interaction> interactions) {
+		this.interactions = interactions;
 	}
 	
 }

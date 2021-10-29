@@ -118,4 +118,14 @@ public class TicketServiceImpl implements TicketService {
 		return model;
 	}
 
+	@Override
+	public long numTickets() {
+		return this.ticketRepository.numTickets();
+	}
+
+	@Override
+	public long numTicketsByUser(long user_id) {
+		return this.ticketRepository.numTicketsByUser(user_id);
+	}
+
 }

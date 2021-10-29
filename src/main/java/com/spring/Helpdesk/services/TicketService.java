@@ -16,5 +16,7 @@ public interface TicketService {
 	public boolean delete(long id);
 	public boolean update(long id, Ticket ticket);
 	public Ticket show(long id);
+	public long numTickets(); 
+	public long numTicketsByUser(long user_id);
 	
 }

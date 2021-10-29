@@ -18,29 +18,38 @@
 				</div>
 				
 				<div class="form-group">
-					<textarea th:field="*{description}" name="description" placeholder="Enter ticket details" class="form-control"></textarea>
+					<textarea th:field="*{description}" id="mytextarea" name="description" placeholder="Enter ticket details" class="form-control"></textarea>
 					<p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger mt-2">#</p>
 				</div>
 				<div class="form-group">
 					Technician:
 					<select th:field="*{technician}"  class="custom-select">
-						<option th:each="tech : ${techs}" 
-								th:value="${tech.id}" 
-								th:text="${tech.name}"></option>
+						<th:block th:each="tech : ${techs}">
+						<th:block th:switch="${tech.name}">
+							<th:block th:case="${userLoggedIn.name}">
+								<option 
+									th:value="${tech.id}" 
+									th:text="You"></option>
+							</th:block>
+							<th:block th:case="*">
+								<option 
+										th:value="${tech.id}" 
+										th:text="${tech.name}"></option>
+							</th:block>
+						</th:block>
+					</th:block>
 					</select>
 				</div>
 				<div class="form-group">
-					Finished:
+					Status:
 					<select th:field="*{finished}" class="custom-select">
-						<option th:value="true">True</option>
-						<option th:value="false">False</option>
+						<option th:value="false">Open</option>
+						<option th:value="true">Closed</option>
 					</select>
 				</div>
 				<div class="form-group">
-					<a th:href="@{/tickets/{id}(id = ${ticket.id})}" class="btn btn-secondary">View this ticket</a>
-					<a href="/tickets/" class="btn btn-secondary">Show tickets</a>
-					<br />
-					<button type="submit" class="btn btn-primary mt-2" style="cursor:pointer;">Save</button>
+					<a th:href="@{/tickets/{id}(id = ${ticket.id})}" class="btn btn-secondary">Show ticket</a>
+					<button type="submit" class="btn btn-primary" style="cursor:pointer;">Save</button>
 				</div>
 			</form>
 		</div>

@@ -62,6 +62,10 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "technician")
 	private Set<Ticket> ticketsTechnician;
 	
+	@Column
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userInteraction")
+	private Set<Interaction> interactions;
+	
 	public User() {
 		
 	}
