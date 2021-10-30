@@ -81,6 +81,9 @@ public class UserController {
 	public String update(@PathVariable("id") long id, @Valid @ModelAttribute("user") User user, BindingResult bindingResult , Model model) {
 		
 		if(bindingResult.hasErrors()) {
+			List<Role> roles = this.roleService.findAll();
+
+	        model.addAttribute("roles", roles);
 			return "users/edit";
 		}
 		
